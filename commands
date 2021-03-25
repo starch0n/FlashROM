@@ -1,0 +1,44 @@
+#backup phone data
+
+Set-Location d:\path\to\factory\image\folder
+7z x factory-image-file.zip
+Set-Location model-version
+Copy-Item bootloader-model-version.img bootloader.img
+7z x image-model-version.zip
+Copy-Item radio-model-version.img radio.img
+
+#Unzip or extract the image-xxx-xxx.zip file to a desired folder on your computer to get the following files:
+#boot.img
+#cache.img
+#recovery.img
+#system.img
+#userdata.img
+#system.img
+
+adb devices -l
+adb reboot bootloader
+fastboot devices -l
+
+
+fastboot flash bootloader bootloader.img
+fastboot flash radio radio.img
+fastboot reboot-bootloader
+# in one line:
+# fastboot flash bootloader bootloader.img; fastboot flash radio radio.img; fastboot reboot-bootloader
+
+fastboot flash recovery recovery.img
+fastboot flash boot boot.img
+fastboot flash system system.img
+fastboot reboot
+# in one line:
+# fastboot flash recovery recovery.img; fastboot flash boot boot.img; fastboot flash system system.img; fastboot reboot
+
+# install TWRP:
+adb reboot bootloader
+fastboot flash recovery twrp.img
+# Note many devices will replace your custom recovery automatically during first boot. To prevent this, use Google to find the proper key combo to enter recovery. After typing fastboot reboot, hold the key combo and boot to TWRP. Once TWRP is booted, TWRP will patch the stock ROM to prevent the stock ROM from replacing TWRP. If you don't follow this step, you will have to repeat the install.
+
+fastboot reboot
+
+# then install supersu: https://www.chainfire.eu/
+# flash from recovery
